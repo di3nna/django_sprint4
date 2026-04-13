@@ -14,6 +14,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'pages.apps.PagesConfig',
     'blog.apps.BlogConfig',
+    'users.apps.UsersConfig',
+    'django_bootstrap5',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -36,10 +38,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'blogicum.urls'
 
+TEMPLATES_DIR = BASE_DIR / 'templates'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -113,3 +117,18 @@ STATICFILES_DIRS = [
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
+
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'blog:index'
+LOGOUT_REDIRECT_URL = 'blog:index'
+
+PAGINATE_BY = 10
+
+CSRF_FAILURE_VIEW = 'pages.views.csrf_failure'
