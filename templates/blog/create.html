@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% block title %}
+  {% if '/edit/' in request.path %}
+    Редактирование публикации
+  {% elif "/delete/" in request.path %}
+    Удаление публикации
+  {% else %}
+    Добавление публикации
+  {% endif %}
+{% endblock %}
+{% block content %}
+  <div class="col d-flex justify-content-center">
+    <div class="card" style="width: 40rem;">
+      <div class="card-header">
+        {% if '/edit/' in request.path %}
+          Редактирование публикации
+        {% elif '/delete/' in request.path %}
+          Удаление публикации
+        {% else %}
+          Добавление публикации
+        {% endif %}
+      </div>
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          
+          {# Блок для удаления — показываем содержимое поста, а не форму #}
+          {% if '/delete/' in request.path %}
+            <article>
+              {% if post.image %}
+                <a href="{{ post.image.url }}" target="_blank">
+                  <img class="border-3 rounded img-fluid img-thumbnail mb-2 mx-auto d-block" src="{{ post.image.url }}">
+                </a>
+              {% endif %}
+              <p>
+                {{ post.pub_date|date:"d E Y" }} | 
+                {% if post.location %}
+                  {{ post.location.name }}
+                {% else %}
+                  Планета Земля
+                {% endif %}
+              </p>
+              <h3>{{ post.title }}</h3>
+              <p>{{ post.text|linebreaksbr }}</p>
+            </article>
+            <button type="submit" class="btn btn-danger">Удалить</button>
+            <a href="{% url 'blog:post_detail' post.id %}" class="btn btn-secondary">Отмена</a>
+          
+          {# Блок для создания/редактирования — показываем форму #}
+          {% else %}
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+          {% endif %}
+          
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
